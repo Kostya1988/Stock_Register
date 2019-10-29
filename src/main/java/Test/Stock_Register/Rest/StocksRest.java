@@ -16,6 +16,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
+@RequestMapping("/api/")
 
 public class StocksRest {
     @Autowired
@@ -25,20 +26,29 @@ public class StocksRest {
 
     @PostMapping
     public ResponseEntity<Stocks> saveStocks(@RequestBody Stocks stocks) {
-
         stocksService.save(stocks);
+        History history = new History();
+        history.setCreateDate(new Date());
+        history.setMessage("Created New Stocks");
+        history.setStockNumber(new Stocks().getId());
+        stocksService.save(history);
         return new ResponseEntity<>(stocks, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Stocks> deleteStocks(@PathVariable("id") Long id) {
-        List<Stocks> stocks = stocksService.getAll();
+        Stocks stocks = stocksService.getById(id);
 
         if (stocks == null) {
             throw new StocksException.MyResourceNotFoundException("Id Not Found");
         }
         stocksService.delete(id);
-        return new ResponseEntity(stocks, HttpStatus.OK);
+        History history = new History();
+        history.setCreateDate(new Date());
+        history.setMessage("Delete " + id + " id");
+        history.setStockNumber(new Stocks().getId());
+        stocksService.save(history);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping
@@ -60,11 +70,10 @@ public class StocksRest {
     }
 
     @GetMapping(value = "/privateData")
-
     public ResponseEntity getAllPrivateDate() {
         List<Stocks> stocks = stocksService.getAll();
         if (stocks.isEmpty()) {
-            throw new StocksException.MyResourceNotFoundException("PrivateDate Are Empty");
+            throw new StocksException.MyResourceNotFoundException("Private Date Are Empty");
         }
         List<PrivateData> privateData = new ArrayList<>();
         for (Stocks st : stocks) {
@@ -76,7 +85,20 @@ public class StocksRest {
         return new ResponseEntity<>(privateData, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/History")
+    public ResponseEntity<List<History>> getAllHistory() {
+        List<History> histories = historyRepository.findAll();
+        if (histories.isEmpty()) {
+            throw new StocksException.MyResourceNotFoundException("History Are Empty");
+        }
+        return new ResponseEntity(histories, HttpStatus.OK);
+    }
+
 }
+
+    
+
+
 
     
 
