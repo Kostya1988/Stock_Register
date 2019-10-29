@@ -40,5 +40,9 @@ public class StocksServiceImpl implements StocksService {
         return stocksRepository.findAllByQuantity(quantity);
     }
 
+    @Override
+    public void save(History history) {
+        historyRepository.save(history);
+    }
 
 }
