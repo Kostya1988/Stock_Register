@@ -14,10 +14,9 @@ public class History {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "create_Date")
-    private LocalDate create_Date;
+    private Date createDate;
     @Column(name = "message")
-    private Date message;
+    private String message;
     @Column(name = "stock_number")
-    private int stock_Number;
-
+    private Long stockNumber;
 }
