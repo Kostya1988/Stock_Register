@@ -15,9 +15,4 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
     @Query("From History where stock_number=:stock_number")
     List<History> findByStock_Number(@Param("stock_number") Long stock_number);
 
-    @Modifying
-    @Transactional
-    @Query(value = "insert into History(create_Date,message,stock_number) VALUES (:create_Date,:message,:stock_number)", nativeQuery = true)
-    void dataInsert(@Param("create_Date") LocalDate create_Date, @Param("message") String message, @Param("stock_number") int stock_Number);
-
-}
+  }
