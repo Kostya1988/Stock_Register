@@ -16,4 +16,6 @@ public interface StocksService {
     List<Stocks> getAll();
 
     Stocks findAllByQuantity(int quantity) ;
+      
+    void save(History history);
 }
