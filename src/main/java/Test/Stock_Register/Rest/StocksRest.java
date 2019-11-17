@@ -36,7 +36,7 @@ public class StocksRest {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Stocks> deleteStocks(@PathVariable("id") Long id) {
+    public Map<String, Boolean> deleteStocks(@PathVariable("id") Long id) {
         Stocks stocks = stocksService.getById(id);
 
         if (stocks == null) {
@@ -48,7 +48,9 @@ public class StocksRest {
         history.setMessage("Delete " + id + " id");
         history.setStockNumber(new Stocks().getId());
         stocksService.save(history);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return response;
     }
 
     @GetMapping
